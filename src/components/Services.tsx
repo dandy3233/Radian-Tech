@@ -1,22 +1,46 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import { Database, Globe, Code, Smartphone, Settings, ShoppingCart, ArrowRight, Check } from 'lucide-react';
 
 const Services = () => {
   const [activeService, setActiveService] = useState(0);
 
+useEffect(() => {
+  const handleHashChange = () => {
+    const hash = window.location.hash.replace('#', '');
+    const index = services.findIndex(service => service.id === hash);
+    if (index !== -1) {
+      setActiveService(index);
+    }
+  };
+
+  // Run on first load and when hash changes
+  handleHashChange();
+  window.addEventListener('hashchange', handleHashChange);
+
+  return () => {
+    window.removeEventListener('hashchange', handleHashChange);
+  };
+}, []);
+
+
+
   const services = [
     {
+      id: 'erp-solutions',
       icon: Database,
       title: 'ERP Solutions',
       description: 'We design and implement powerful Enterprise Resource Planning systems that unify your operations — from finance and inventory to HR and customer management — under one integrated platform.',
       features: ['Financial Management', 'Inventory Control', 'HR Management', 'Customer Relations', 'Real-time Analytics', 'Multi-location Support'],
-      technologies: ['SAP', 'Oracle', 'Microsoft Dynamics', 'Custom Solutions'],
+      technologies: ['Odoo', 'Oracle', 'Microsoft Dynamics', 'Custom Solutions'],
       color: 'from-blue-600 to-cyan-600',
       bgColor: 'from-blue-50 to-cyan-50'
     },
     {
+      id: 'web-development',
       icon: Globe,
       title: 'Web Development',
+      // id: 'web-development', // use kebab-case for simplicity
       description: 'Our expert developers craft fast, responsive, and secure websites that reflect your brand and engage your audience, from corporate sites to dynamic web applications.',
       features: ['Responsive Design', 'Security Focus', 'Performance Optimization', 'SEO Ready', 'CMS Integration', 'E-commerce Ready'],
       technologies: ['React', 'Next.js', 'Node.js', 'WordPress'],
@@ -24,6 +48,7 @@ const Services = () => {
       bgColor: 'from-purple-50 to-pink-50'
     },
     {
+      id: 'custom-software',
       icon: Code,
       title: 'Custom Software Development',
       description: 'We build tailor-made software solutions that solve complex business problems and deliver measurable results with cutting-edge technologies.',
@@ -33,6 +58,7 @@ const Services = () => {
       bgColor: 'from-indigo-50 to-blue-50'
     },
     {
+      id: 'mobile-apps',
       icon: Smartphone,
       title: 'Mobile App Development',
       description: 'Reach your customers wherever they are with intuitive and high-performance mobile applications for Android and iOS platforms.',
@@ -42,6 +68,7 @@ const Services = () => {
       bgColor: 'from-emerald-50 to-teal-50'
     },
     {
+      id: 'it-consulting',
       icon: Settings,
       title: 'IT Consulting & System Integration',
       description: 'Our consultants guide you through your digital transformation journey with strategic advice and seamless integration of IT systems.',
@@ -51,6 +78,7 @@ const Services = () => {
       bgColor: 'from-orange-50 to-red-50'
     },
     {
+      id: 'ecommerce',
       icon: ShoppingCart,
       title: 'E-commerce Development',
       description: 'Launch and grow your online store with robust platforms, payment integrations, and user-friendly shopping experiences.',
@@ -86,10 +114,10 @@ const Services = () => {
         </div>
 
         {/* Service Tabs */}
-        <div className="flex flex-wrap justify-center gap-4 mb-16">
+        <div  className="flex flex-wrap justify-center gap-4 mb-16">
           {services.map((service, index) => (
             <button
-              key={index}
+              key={index} id={service.id}
               onClick={() => setActiveService(index)}
               className={`flex items-center space-x-3 px-6 py-3 rounded-full font-medium transition-all duration-300 ${
                 activeService === index
